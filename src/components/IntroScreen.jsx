@@ -77,7 +77,7 @@ export default function IntroScreen({ onStart }) {
         {/* Photo with controlled height for mobile */}
         <div className="relative max-h-[160px] xs:max-h-[185px] sm:max-h-[220px] aspect-[3/4] mx-auto rounded-2xl overflow-hidden border-2 border-cyan-400/50 shadow-md my-0.5">
           <img
-            src="/nightwings.jpg"
+            src="./nightwings.jpg"
             alt="Albert y María como Nightwings en Kabal"
             className="w-full h-full object-cover object-top"
           />

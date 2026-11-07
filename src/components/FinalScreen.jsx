@@ -92,7 +92,7 @@ export default function FinalScreen({ answers = {}, onRestart }) {
           whileHover={{ scale: 1.02 }}
         >
           <img
-            src="/nightwings.jpg"
+            src="./nightwings.jpg"
             alt="Albert y María Nightwings"
             className="w-full h-full object-cover object-top"
           />
