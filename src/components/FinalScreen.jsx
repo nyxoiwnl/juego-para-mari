@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MessageSquare, RotateCcw, Copy, Check } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MessageSquare, RotateCcw, Copy, Check, ChevronDown } from 'lucide-react';
 import NightwingLogo from './NightwingLogo';
 import BatConfettiRain from './BatConfettiRain';
 
@@ -17,6 +17,19 @@ const QUESTION_TITLES = [
 export default function FinalScreen({ answers = {}, onRestart }) {
   const [copied, setCopied] = useState(false);
   const [confettiActive, setConfettiActive] = useState(true);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const scrollRef = useRef(null);
+
+  // Hide scroll hint once user starts scrolling
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handler = () => {
+      if (el.scrollTop > 30) setShowScrollHint(false);
+    };
+    el.addEventListener('scroll', handler, { passive: true });
+    return () => el.removeEventListener('scroll', handler);
+  }, []);
 
   // Format WhatsApp message cleanly with safe, universal formatting
   const formatWhatsAppMessage = () => {
@@ -52,7 +65,20 @@ export default function FinalScreen({ answers = {}, onRestart }) {
   };
 
   return (
-    <div className="fixed inset-0 w-full h-full animated-bg overflow-y-auto overflow-x-hidden overscroll-contain touch-scroll no-select flex flex-col items-center justify-start py-6 sm:py-8 px-3 sm:px-4 select-none">
+    <div
+      ref={scrollRef}
+      className="fixed inset-0 w-full h-full animated-bg no-select select-none"
+      style={{
+        overflowY: 'scroll',
+        overflowX: 'hidden',
+        WebkitOverflowScrolling: 'touch',
+        touchAction: 'pan-y',
+        overscrollBehaviorX: 'none',
+        overscrollBehaviorY: 'contain',
+      }}
+    >
+      {/* Padding wrapper */}
+      <div className="flex flex-col items-center justify-start py-6 sm:py-8 px-3 sm:px-4 min-h-full">
       <BatConfettiRain active={confettiActive} />
 
       <motion.div
@@ -117,7 +143,7 @@ export default function FinalScreen({ answers = {}, onRestart }) {
         </div>
 
         {/* Answers Preview Box */}
-        <div className="bg-slate-950/70 rounded-2xl p-3.5 sm:p-4 text-left border border-white/10 mb-4 max-h-52 overflow-y-auto">
+        <div className="bg-slate-950/70 rounded-2xl p-3.5 sm:p-4 text-left border border-white/10 mb-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5">
             <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider font-outfit">
               📋 Resumen de tus Respuestas:
@@ -178,6 +204,30 @@ export default function FinalScreen({ answers = {}, onRestart }) {
           </motion.button>
         </div>
       </motion.div>
+      </div>
+
+      {/* Scroll-down hint indicator */}
+      <AnimatePresence>
+        {showScrollHint && (
+          <motion.div
+            className="fixed bottom-4 inset-x-0 flex flex-col items-center gap-1 z-50 pointer-events-none"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            <span className="text-[10px] text-cyan-300/80 font-semibold tracking-wider uppercase">
+              Desliza para ver más
+            </span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ChevronDown size={22} className="text-cyan-400 drop-shadow-[0_0_6px_rgba(0,210,255,0.8)]" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
