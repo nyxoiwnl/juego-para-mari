@@ -52,7 +52,7 @@ export default function FinalScreen({ answers = {}, onRestart }) {
   };
 
   return (
-    <div className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-start py-6 sm:py-8 px-3 sm:px-4">
+    <div className="fixed inset-0 w-full h-full animated-bg overflow-y-auto overflow-x-hidden overscroll-contain touch-scroll no-select flex flex-col items-center justify-start py-6 sm:py-8 px-3 sm:px-4 select-none">
       <BatConfettiRain active={confettiActive} />
 
       <motion.div

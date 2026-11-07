@@ -49,7 +49,10 @@ export default function SecretNightwingLetter({ onComplete }) {
   };
 
   return (
-    <div className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-3 sm:px-4">
+    <div
+      className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-3 sm:py-5 px-3 select-none"
+      style={{ touchAction: 'none' }}
+    >
       {/* Header */}
       <div className="z-20 text-center flex flex-col items-center gap-1">
         <div className="flex items-center gap-2 glass px-3.5 py-1 rounded-full border border-blue-500/30">

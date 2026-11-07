@@ -63,13 +63,13 @@ export default function DynamicDuoMemory({ onComplete }) {
             const next = m + 1;
             if (next === ICONS.length && !hasFinishedRef.current) {
               hasFinishedRef.current = true;
-              setTimeout(() => setShowQuestion(true), 700);
+              setTimeout(() => setShowQuestion(true), 600);
             }
             return next;
           });
           setFlipped([]);
           setIsLocked(false);
-        }, 350);
+        }, 300);
       } else {
         setTimeout(() => {
           setCards((prev) => {
@@ -80,7 +80,7 @@ export default function DynamicDuoMemory({ onComplete }) {
           });
           setFlipped([]);
           setIsLocked(false);
-        }, 800);
+        }, 750);
       }
     }
   };
@@ -91,25 +91,25 @@ export default function DynamicDuoMemory({ onComplete }) {
   };
 
   return (
-    <div className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-3 sm:px-4">
+    <div className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-3 sm:py-5 px-3">
       {/* Header */}
       <div className="z-20 text-center flex flex-col items-center gap-1">
-        <div className="flex items-center gap-2 glass px-3.5 py-1 rounded-full border border-blue-500/30">
-          <NightwingLogo size={20} glow={false} />
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
+        <div className="flex items-center gap-1.5 glass px-3 py-1 rounded-full border border-blue-500/30">
+          <NightwingLogo size={18} glow={false} />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-cyan-400 font-bold">
             Misión 2 de 7 · Sincronía
           </span>
         </div>
-        <h2 className="text-lg sm:text-2xl font-bold font-outfit text-white text-glow-blue mt-1">
-          El Dúo Dinámico (4x4) 🦇✨
+        <h2 className="text-base sm:text-xl font-bold font-outfit text-white text-glow-blue mt-0.5">
+          El Dúo Dinámico 🦇✨
         </h2>
-        <p className="text-xs text-blue-200/70 max-w-xs">
+        <p className="text-[11px] sm:text-xs text-blue-200/70 max-w-xs">
           Encuentra los 8 pares de íconos que nos conectan.
         </p>
       </div>
 
       {/* Grid of 16 Cards (4x4) */}
-      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 p-2.5 sm:p-4 glass-card rounded-3xl max-w-xs sm:max-w-sm md:max-w-md w-full border border-blue-400/30 my-auto">
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 p-2 sm:p-3 glass-card rounded-2xl max-w-xs sm:max-w-sm md:max-w-md w-full border border-blue-400/30 my-auto">
         {cards.map((card, idx) => (
           <div
             key={card.uid}
@@ -117,30 +117,30 @@ export default function DynamicDuoMemory({ onComplete }) {
             className="aspect-[4/5] cursor-pointer perspective-1000 relative"
           >
             <motion.div
-              className="w-full h-full relative transition-all duration-500"
+              className="w-full h-full relative transition-all duration-300"
               animate={{ rotateY: card.isFlipped || card.isMatched ? 180 : 0 }}
               style={{ transformStyle: 'preserve-3d' }}
             >
               {/* Back (hidden initially) */}
               <div
-                className="absolute inset-0 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center border-2 border-blue-500/40 bg-gradient-to-br from-blue-900/60 to-slate-900/90 shadow-md p-1"
+                className="absolute inset-0 rounded-xl flex flex-col items-center justify-center border border-blue-500/40 bg-gradient-to-br from-blue-900/60 to-slate-900/90 shadow-sm p-1"
                 style={{
                   backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden',
                 }}
               >
-                <NightwingLogo size={24} glow={false} />
-                <span className="text-[7px] sm:text-[8px] text-cyan-400/80 font-bold tracking-widest uppercase mt-0.5">
+                <NightwingLogo size={22} glow={false} />
+                <span className="text-[7px] text-cyan-400/80 font-bold tracking-widest uppercase mt-0.5">
                   Kabal
                 </span>
               </div>
 
               {/* Front (revealed) */}
               <div
-                className={`absolute inset-0 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-1 border-2 transition-all ${
+                className={`absolute inset-0 rounded-xl flex flex-col items-center justify-center p-1 border transition-all ${
                   card.isMatched
-                    ? 'bg-gradient-to-br from-blue-600/40 via-cyan-500/20 to-orange-500/30 border-orange-400 shadow-[0_0_15px_rgba(255,107,53,0.5)]'
-                    : 'bg-slate-900/95 border-cyan-400 shadow-[0_0_12px_rgba(0,210,255,0.3)]'
+                    ? 'bg-gradient-to-br from-blue-600/40 via-cyan-500/20 to-orange-500/30 border-orange-400 shadow-[0_0_10px_rgba(255,107,53,0.4)]'
+                    : 'bg-slate-900/95 border-cyan-400'
                 }`}
                 style={{
                   transform: 'rotateY(180deg)',
@@ -148,10 +148,10 @@ export default function DynamicDuoMemory({ onComplete }) {
                   WebkitBackfaceVisibility: 'hidden',
                 }}
               >
-                <span className="text-xl sm:text-2xl md:text-3xl filter drop-shadow-md">
+                <span className="text-xl sm:text-2xl filter drop-shadow-sm">
                   {card.emoji}
                 </span>
-                <span className="text-[7px] sm:text-[9px] font-bold text-slate-200 mt-0.5 text-center leading-tight">
+                <span className="text-[7px] sm:text-[8px] font-bold text-slate-200 mt-0.5 text-center leading-tight">
                   {card.label}
                 </span>
               </div>
@@ -163,7 +163,7 @@ export default function DynamicDuoMemory({ onComplete }) {
       {/* Progress */}
       <div className="z-10 flex items-center gap-2 text-xs text-blue-200/60 font-semibold py-1">
         <span>Progreso:</span>
-        <div className="w-24 sm:w-28 h-2 bg-slate-800 rounded-full overflow-hidden border border-blue-500/30">
+        <div className="w-24 sm:w-28 h-1.5 sm:h-2 bg-slate-800 rounded-full overflow-hidden border border-blue-500/30">
           <motion.div
             className="h-full bg-gradient-to-r from-cyan-400 to-orange-400"
             animate={{ width: `${(matches / ICONS.length) * 100}%` }}

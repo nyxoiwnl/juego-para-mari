@@ -61,11 +61,11 @@ export default function NightwingWordSearch({ onComplete }) {
       setSelectedCell(null);
       if (updated.length === WORDS.length && !hasFinishedRef.current) {
         hasFinishedRef.current = true;
-        setTimeout(() => setShowQuestion(true), 750);
+        setTimeout(() => setShowQuestion(true), 650);
       }
     } else {
       setWrongFlash({ r, c });
-      setTimeout(() => setWrongFlash(null), 350);
+      setTimeout(() => setWrongFlash(null), 300);
       setSelectedCell(null);
     }
   };
@@ -96,33 +96,33 @@ export default function NightwingWordSearch({ onComplete }) {
   };
 
   return (
-    <div className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-2 sm:px-4">
+    <div className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-2 sm:py-5 px-2 sm:px-4">
       {/* Header */}
-      <div className="z-20 text-center flex flex-col items-center gap-1">
-        <div className="flex items-center gap-2 glass px-3.5 py-1 rounded-full border border-blue-500/30">
-          <NightwingLogo size={20} glow={false} />
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
+      <div className="z-20 text-center flex flex-col items-center gap-0.5">
+        <div className="flex items-center gap-1.5 glass px-3 py-0.5 rounded-full border border-blue-500/30">
+          <NightwingLogo size={18} glow={false} />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-cyan-400 font-bold">
             Misión 4 de 7 · Archivos Secretos
           </span>
         </div>
-        <h2 className="text-lg sm:text-2xl font-bold font-outfit text-white text-glow-blue mt-1">
+        <h2 className="text-base sm:text-xl font-bold font-outfit text-white text-glow-blue mt-0.5">
           Sopa de Letras Nocturna 🔍🦇
         </h2>
-        <p className="text-xs text-blue-200/70 max-w-xs">
-          ¡Ahora sí es un reto! Las palabras están en horizontal, vertical y diagonal. Toca la primera y la última letra.
+        <p className="text-[10px] sm:text-xs text-blue-200/70 max-w-xs">
+          Palabras en horizontal, vertical y diagonal. Toca la primera y la última letra.
         </p>
       </div>
 
       {/* Words Badges List */}
-      <div className="z-10 flex flex-wrap justify-center gap-1 sm:gap-1.5 max-w-md my-2">
+      <div className="z-10 flex flex-wrap justify-center gap-1 max-w-xs sm:max-w-md my-1">
         {WORDS.map((w) => {
           const found = isWordFound(w.word);
           return (
             <span
               key={w.word}
-              className={`text-[9px] sm:text-[10px] font-bold tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border transition-all ${
+              className={`text-[8px] sm:text-[10px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 rounded-full border transition-all ${
                 found
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(0,210,255,0.5)]'
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white'
                   : 'bg-slate-900/70 border-slate-700/60 text-slate-300'
               }`}
             >
@@ -133,8 +133,8 @@ export default function NightwingWordSearch({ onComplete }) {
       </div>
 
       {/* 10x10 Grid */}
-      <div className="z-10 p-2 sm:p-3 glass-card rounded-2xl max-w-xs sm:max-w-sm w-full border border-blue-500/30 my-auto">
-        <div className="grid grid-cols-10 gap-0.5 sm:gap-1">
+      <div className="z-10 p-1.5 sm:p-3 glass-card rounded-2xl max-w-[310px] xs:max-w-xs sm:max-w-sm w-full border border-blue-500/30 my-auto">
+        <div className="grid grid-cols-10 gap-0.5">
           {GRID.map((row, r) =>
             row.map((letter, c) => {
               const isSelected = selectedCell?.r === r && selectedCell?.c === c;
@@ -142,22 +142,21 @@ export default function NightwingWordSearch({ onComplete }) {
               const isWrong = wrongFlash?.r === r && wrongFlash?.c === c;
 
               return (
-                <motion.div
+                <div
                   key={`${r}-${c}`}
                   onClick={() => handleCellClick(r, c)}
-                  className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex items-center justify-center rounded-md sm:rounded-lg cursor-pointer text-[10px] sm:text-xs md:text-sm font-bold font-mono transition-all border ${
+                  className={`w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-md cursor-pointer text-[10px] sm:text-xs font-bold font-mono transition-all border ${
                     isFound
-                      ? 'bg-gradient-to-br from-blue-600/90 to-cyan-500/90 border-cyan-300 text-white shadow-[0_0_8px_rgba(0,210,255,0.7)]'
+                      ? 'bg-gradient-to-br from-blue-600/90 to-cyan-500/90 border-cyan-300 text-white shadow-sm'
                       : isSelected
-                      ? 'bg-orange-500 border-orange-300 text-white scale-110 shadow-[0_0_12px_rgba(255,107,53,0.9)] z-10'
+                      ? 'bg-orange-500 border-orange-300 text-white scale-105 z-10'
                       : isWrong
-                      ? 'bg-red-500/80 border-red-400 text-white animate-pulse'
-                      : 'bg-slate-900/80 border-white/5 text-slate-300 hover:border-blue-400/50'
+                      ? 'bg-red-500/80 border-red-400 text-white'
+                      : 'bg-slate-900/80 border-white/5 text-slate-300'
                   }`}
-                  whileTap={{ scale: 0.9 }}
                 >
                   {letter}
-                </motion.div>
+                </div>
               );
             })
           )}
@@ -165,11 +164,11 @@ export default function NightwingWordSearch({ onComplete }) {
       </div>
 
       {/* Progress */}
-      <div className="z-10 text-xs text-blue-200/60 font-semibold py-1">
+      <div className="z-10 text-[11px] text-blue-200/60 font-semibold py-0.5">
         Palabras encontradas: <strong className="text-orange-400 font-mono">{foundWords.length} / {WORDS.length}</strong>
       </div>
 
-      {/* Question 4 with updated wording */}
+      {/* Question 4 */}
       <QuestionModal
         isOpen={showQuestion}
         questionNumber={4}

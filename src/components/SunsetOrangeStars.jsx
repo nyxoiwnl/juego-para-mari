@@ -103,7 +103,7 @@ export default function SunsetOrangeStars({ onComplete }) {
 
   return (
     <div
-      className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-3 sm:px-4"
+      className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-3 sm:py-5 px-3 select-none"
       style={{ touchAction: 'none' }}
     >
       {/* Header */}

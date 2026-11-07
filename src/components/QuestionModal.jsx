@@ -35,13 +35,13 @@ export default function QuestionModal({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md no-select overflow-y-auto"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md no-select overflow-y-auto overflow-x-hidden overscroll-contain touch-scroll"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="relative w-full max-w-md my-auto max-h-[92vh] overflow-y-auto glass-card rounded-[2rem] p-5 sm:p-7 border border-blue-500/30 text-white shadow-2xl"
+          className="relative w-full max-w-md my-auto max-h-[92vh] overflow-y-auto overflow-x-hidden overscroll-contain touch-scroll glass-card rounded-[2rem] p-4 xs:p-5 sm:p-7 border border-blue-500/30 text-white shadow-2xl"
           initial={{ scale: 0.95, y: 20, opacity: 0 }}
           animate={{ scale: 1, y: 0, opacity: 1 }}
           exit={{ scale: 0.95, y: 15, opacity: 0 }}

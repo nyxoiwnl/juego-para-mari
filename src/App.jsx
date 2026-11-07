@@ -28,7 +28,7 @@ export default function App() {
   };
 
   return (
-    <div className="w-full h-screen select-none bg-[#050813] overflow-y-auto overflow-x-hidden">
+    <div className="fixed inset-0 w-full h-full select-none bg-[#050813] overflow-hidden">
       <AnimatePresence mode="wait">
         {stage === 'intro' && (
           <IntroScreen

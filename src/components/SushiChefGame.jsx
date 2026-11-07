@@ -16,12 +16,11 @@ export default function SushiChefGame({ onComplete }) {
   const gameLoopRef = useRef(null);
   const hasFinishedRef = useRef(false);
 
-  // Move tray with mouse or touch
   const handlePointerMove = (clientX) => {
     if (!playAreaRef.current) return;
     const rect = playAreaRef.current.getBoundingClientRect();
     const x = clientX - rect.left - rect.width / 2;
-    const limit = rect.width / 2 - 40;
+    const limit = rect.width / 2 - 38;
     setTrayX(Math.max(-limit, Math.min(limit, x)));
   };
 
@@ -30,25 +29,22 @@ export default function SushiChefGame({ onComplete }) {
     if (e.touches.length > 0) handlePointerMove(e.touches[0].clientX);
   };
 
-  // Spawn items: mostly sushi, sometimes spicy wasabi 🌶️
   useEffect(() => {
     if (score >= TARGET_SCORE) return;
     const interval = setInterval(() => {
       const id = Date.now() + Math.random();
-      const x = (Math.random() - 0.5) * 260;
-      // 25% chance of spicy wasabi obstacle
-      const isWasabi = Math.random() < 0.25;
+      const x = (Math.random() - 0.5) * 240;
+      const isWasabi = Math.random() < 0.22;
       const emoji = isWasabi
         ? '🌶️'
         : SUSHI_TYPES[Math.floor(Math.random() * SUSHI_TYPES.length)];
 
-      setItemsList((prev) => [...prev, { id, x, y: -30, emoji, isWasabi, speed: 4.5 + Math.random() * 2 }]);
+      setItemsList((prev) => [...prev, { id, x, y: -30, emoji, isWasabi, speed: 4.2 + Math.random() * 1.8 }]);
     }, 950);
 
     return () => clearInterval(interval);
   }, [score]);
 
-  // Game Loop with dynamic height calculation
   useEffect(() => {
     if (score >= TARGET_SCORE) return;
 
@@ -58,8 +54,8 @@ export default function SushiChefGame({ onComplete }) {
         return;
       }
 
-      const areaHeight = playAreaRef.current.clientHeight || 450;
-      const catchZoneTop = areaHeight - 80;
+      const areaHeight = playAreaRef.current.clientHeight || 420;
+      const catchZoneTop = areaHeight - 75;
       const catchZoneBottom = areaHeight - 15;
 
       setItemsList((prev) => {
@@ -67,27 +63,24 @@ export default function SushiChefGame({ onComplete }) {
           .map((s) => ({ ...s, y: s.y + s.speed }))
           .filter((s) => s.y < areaHeight + 20);
 
-        // Catch check
         const caught = next.find(
-          (s) => s.y >= catchZoneTop && s.y <= catchZoneBottom && Math.abs(s.x - trayX) < 55
+          (s) => s.y >= catchZoneTop && s.y <= catchZoneBottom && Math.abs(s.x - trayX) < 50
         );
 
         if (caught) {
           if (caught.isWasabi) {
-            // Hit wasabi obstacle!
             setSpicyHit(true);
-            setTimeout(() => setSpicyHit(false), 500);
+            setTimeout(() => setSpicyHit(false), 450);
             try {
-              window.navigator?.vibrate?.(100);
+              window.navigator?.vibrate?.(80);
             } catch (e) {}
             setScore((s) => Math.max(0, s - 1));
           } else {
-            // Good sushi catch
             setScore((s) => {
               const nextScore = s + 1;
               if (nextScore >= TARGET_SCORE && !hasFinishedRef.current) {
                 hasFinishedRef.current = true;
-                setTimeout(() => setShowQuestion(true), 650);
+                setTimeout(() => setShowQuestion(true), 600);
               }
               return nextScore;
             });
@@ -112,42 +105,38 @@ export default function SushiChefGame({ onComplete }) {
 
   return (
     <div
-      className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-3 sm:px-4"
+      className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-3 sm:py-5 px-3"
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
       style={{ touchAction: 'none' }}
     >
       {/* Header */}
       <div className="z-20 text-center flex flex-col items-center gap-1">
-        <div className="flex items-center gap-2 glass px-3.5 py-1 rounded-full border border-blue-500/30">
-          <NightwingLogo size={20} glow={false} />
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
+        <div className="flex items-center gap-1.5 glass px-3 py-1 rounded-full border border-blue-500/30">
+          <NightwingLogo size={18} glow={false} />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-cyan-400 font-bold">
             Misión 3 de 7 · La Chef de Valencia
           </span>
         </div>
-        <h2 className="text-lg sm:text-2xl font-bold font-outfit text-white text-glow-blue mt-1">
+        <h2 className="text-base sm:text-xl font-bold font-outfit text-white text-glow-blue mt-0.5">
           Atrapa el Sushi de la Chef 🍣👩‍🍳
         </h2>
-        <p className="text-xs text-blue-200/70 max-w-xs">
-          Atrapa 12 piezas de sushi pero <strong>¡esquiva el wasabi picante 🌶️!</strong>
+        <p className="text-[11px] sm:text-xs text-blue-200/70 max-w-xs">
+          Atrapa 12 piezas de sushi pero <strong>¡esquiva el wasabi 🌶️!</strong>
         </p>
 
-        {/* Counter & Warning */}
-        <div className="flex items-center gap-2.5 mt-1.5">
-          <div className="bg-slate-900/80 px-3.5 py-0.5 rounded-full border border-orange-500/30">
+        {/* Counter */}
+        <div className="flex items-center gap-2 mt-1">
+          <div className="bg-slate-900/80 px-3 py-0.5 rounded-full border border-orange-500/30">
             <span className="text-xs text-orange-300 font-semibold">Sushi: </span>
-            <span className="text-sm font-bold text-orange-400 font-mono">
+            <span className="text-xs font-bold text-orange-400 font-mono">
               {score} / {TARGET_SCORE}
             </span>
           </div>
           {spicyHit && (
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="text-xs font-bold text-red-400 bg-red-950/80 px-2 py-0.5 rounded-full border border-red-500/50 animate-bounce"
-            >
-              ¡Demasiado picante! -1 🌶️
-            </motion.span>
+            <span className="text-xs font-bold text-red-400 bg-red-950/80 px-2 py-0.5 rounded-full border border-red-500/50">
+              ¡Picante! -1 🌶️
+            </span>
           )}
         </div>
       </div>
@@ -155,66 +144,54 @@ export default function SushiChefGame({ onComplete }) {
       {/* Play Area */}
       <div
         ref={playAreaRef}
-        className="relative w-full h-[50vh] sm:h-[55vh] max-h-[460px] max-w-md my-auto"
+        className="relative w-full h-[50vh] sm:h-[55vh] max-h-[440px] max-w-md my-auto"
       >
-        {/* Falling items */}
         <AnimatePresence>
           {itemsList.map((s) => (
-            <motion.div
+            <div
               key={s.id}
               className={`absolute text-3xl sm:text-4xl pointer-events-none filter ${
                 s.isWasabi
-                  ? 'drop-shadow-[0_4px_10px_rgba(239,68,68,0.8)]'
-                  : 'drop-shadow-[0_4px_10px_rgba(255,107,53,0.5)]'
+                  ? 'drop-shadow-[0_4px_8px_rgba(239,68,68,0.7)]'
+                  : 'drop-shadow-[0_4px_8px_rgba(255,107,53,0.4)]'
               }`}
               style={{
                 left: `calc(50% + ${s.x}px)`,
                 top: s.y,
                 transform: 'translateX(-50%)',
               }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1, rotate: s.isWasabi ? [-15, 15, -15] : [0, 8, -8, 0] }}
-              exit={{ scale: 0, opacity: 0 }}
             >
               {s.emoji}
-            </motion.div>
+            </div>
           ))}
         </AnimatePresence>
 
         {/* Chef Tray */}
-        <motion.div
-          className="absolute bottom-4 pointer-events-none flex flex-col items-center"
+        <div
+          className="absolute bottom-3 pointer-events-none flex flex-col items-center"
           style={{
             left: `calc(50% + ${trayX}px)`,
             transform: 'translateX(-50%)',
           }}
-          animate={
-            spicyHit
-              ? { x: [trayX - 10, trayX + 10, trayX - 6, trayX + 6, trayX] }
-              : { x: trayX }
-          }
-          transition={{ duration: 0.35 }}
         >
-          {/* Wooden sushi board */}
           <div
-            className={`w-24 sm:w-28 h-8 sm:h-9 rounded-xl border-2 shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex items-center justify-center gap-1 px-2 transition-all ${
+            className={`w-22 sm:w-26 h-7 sm:h-8 rounded-xl border shadow-md flex items-center justify-center gap-1 px-2 transition-all ${
               spicyHit
-                ? 'bg-gradient-to-r from-red-700 via-rose-600 to-red-800 border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.8)]'
-                : 'bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800 border-amber-400/80 shadow-[0_0_15px_rgba(255,140,66,0.4)]'
+                ? 'bg-gradient-to-r from-red-700 to-rose-700 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.7)]'
+                : 'bg-gradient-to-r from-amber-700 to-amber-800 border-amber-400/80'
             }`}
           >
-            <span className="text-xs sm:text-sm">🥢</span>
-            <span className="text-[9px] sm:text-[10px] font-bold text-amber-100 uppercase tracking-wider font-outfit">
+            <span className="text-xs">🥢</span>
+            <span className="text-[9px] font-bold text-amber-100 uppercase tracking-wider font-outfit">
               Chef Mari
             </span>
-            <span className="text-xs sm:text-sm">🥢</span>
+            <span className="text-xs">🥢</span>
           </div>
-          <div className="w-16 sm:w-20 h-2 bg-cyan-400/30 blur-sm rounded-full mt-1" />
-        </motion.div>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="z-10 text-center text-[10px] sm:text-[11px] text-blue-300/40">
+      <div className="z-10 text-center text-[10px] text-blue-300/40 pb-1">
         Desliza para atrapar sushi y esquivar wasabi 🍣⚡
       </div>
 

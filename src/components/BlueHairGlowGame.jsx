@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
 import NightwingLogo from './NightwingLogo';
 import QuestionModal from './QuestionModal';
 
@@ -9,9 +8,9 @@ function generateStrands() {
   return Array.from({ length: TOTAL_STRANDS }, (_, i) => ({
     id: i,
     x: 12 + (i % 5) * 19 + (Math.random() * 6 - 3),
-    y: 22 + Math.floor(i / 5) * 36 + (Math.random() * 8 - 4),
-    angle: (Math.random() - 0.5) * 20,
-    length: 65 + Math.random() * 30,
+    y: 22 + Math.floor(i / 5) * 36 + (Math.random() * 6 - 3),
+    angle: (Math.random() - 0.5) * 18,
+    length: 60 + Math.random() * 25,
   }));
 }
 
@@ -44,7 +43,7 @@ export default function BlueHairGlowGame({ onComplete }) {
 
             if (next.size === TOTAL_STRANDS && !hasFinishedRef.current) {
               hasFinishedRef.current = true;
-              setTimeout(() => setShowQuestion(true), 750);
+              setTimeout(() => setShowQuestion(true), 600);
             }
             return next;
           });
@@ -67,41 +66,41 @@ export default function BlueHairGlowGame({ onComplete }) {
   return (
     <div
       ref={containerRef}
-      className="min-h-full w-full animated-bg overflow-y-auto no-select flex flex-col items-center justify-between py-4 sm:py-6 px-3 sm:px-4"
+      className="fixed inset-0 w-full h-full animated-bg overflow-hidden no-select flex flex-col items-center justify-between py-3 sm:py-5 px-3"
       onPointerMove={handlePointerMove}
       onTouchMove={handleTouchMove}
       style={{ touchAction: 'none' }}
     >
       {/* Header */}
       <div className="z-20 text-center flex flex-col items-center gap-1">
-        <div className="flex items-center gap-2 glass px-3.5 py-1 rounded-full border border-blue-500/30">
-          <NightwingLogo size={20} glow={false} />
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
+        <div className="flex items-center gap-1.5 glass px-3 py-1 rounded-full border border-blue-500/30">
+          <NightwingLogo size={18} glow={false} />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-cyan-400 font-bold">
             Misión 5 de 7 · Universe Lycan
           </span>
         </div>
-        <h2 className="text-lg sm:text-2xl font-bold font-outfit text-white text-glow-blue mt-1">
+        <h2 className="text-base sm:text-xl font-bold font-outfit text-white text-glow-blue mt-0.5">
           El Brillo de su Cabello Azul 💙
         </h2>
-        <p className="text-xs text-blue-200/70 max-w-xs">
+        <p className="text-[11px] sm:text-xs text-blue-200/70 max-w-xs">
           Desliza tu dedo o cursor sobre los mechones lisos de tono azul Universe.
         </p>
 
         {/* Counter */}
-        <div className="flex items-center gap-2 mt-1.5 bg-slate-900/80 px-3.5 py-0.5 rounded-full border border-blue-500/30">
-          <span className="text-xs text-cyan-300 font-semibold">Mechones iluminados:</span>
-          <span className="text-sm font-bold text-cyan-400 font-mono">
+        <div className="flex items-center gap-2 mt-1 bg-slate-900/80 px-3 py-0.5 rounded-full border border-blue-500/30">
+          <span className="text-xs text-cyan-300 font-semibold">Iluminados:</span>
+          <span className="text-xs font-bold text-cyan-400 font-mono">
             {touched.size} / {TOTAL_STRANDS}
           </span>
         </div>
       </div>
 
       {/* Interactive Strands Canvas */}
-      <div className="relative w-full h-[50vh] sm:h-[55vh] max-h-[460px] max-w-md my-auto pointer-events-none">
+      <div className="relative w-full h-[50vh] sm:h-[55vh] max-h-[440px] max-w-md my-auto pointer-events-none">
         {strands.map((s) => {
           const isLit = touched.has(s.id);
           return (
-            <motion.div
+            <div
               key={s.id}
               className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
               style={{
@@ -109,44 +108,32 @@ export default function BlueHairGlowGame({ onComplete }) {
                 top: `${s.y}%`,
                 transform: `translate(-50%, -50%) rotate(${s.angle}deg)`,
               }}
-              animate={{
-                y: isLit ? [-3, 3, -3] : [0, 4, 0],
-              }}
-              transition={{
-                duration: 2.5 + (s.id % 3),
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
             >
               {/* Straight sleek hair strand line */}
               <div
-                className={`w-1.5 rounded-full transition-all duration-500 relative ${
+                className={`w-1.5 rounded-full transition-all duration-300 relative ${
                   isLit
-                    ? 'bg-gradient-to-b from-cyan-300 via-blue-400 to-blue-600 shadow-[0_0_20px_#00D2FF]'
+                    ? 'bg-gradient-to-b from-cyan-300 via-blue-400 to-blue-600 shadow-[0_0_15px_#00D2FF]'
                     : 'bg-gradient-to-b from-blue-950 via-slate-800 to-blue-900 opacity-40'
                 }`}
                 style={{ height: `${s.length}px` }}
               >
                 {isLit && (
-                  <motion.div
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 text-sm"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                  >
+                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-xs">
                     ✨
-                  </motion.div>
+                  </div>
                 )}
               </div>
-              <span className={`text-[10px] mt-1 font-mono transition-opacity ${isLit ? 'opacity-100 text-cyan-300' : 'opacity-0'}`}>
+              <span className={`text-[9px] mt-0.5 font-mono transition-opacity ${isLit ? 'opacity-100 text-cyan-300' : 'opacity-0'}`}>
                 💙
               </span>
-            </motion.div>
+            </div>
           );
         })}
       </div>
 
       {/* Footer */}
-      <div className="z-10 text-center text-[10px] sm:text-[11px] text-blue-300/40">
+      <div className="z-10 text-center text-[10px] text-blue-300/40 pb-1">
         "3 años con ese azul que te queda espectacular" ⚡
       </div>
 
